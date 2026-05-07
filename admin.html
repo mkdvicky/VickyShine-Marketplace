@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VickyShine Admin — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--brand:#c0622f;--brand-dark:#9a4a22;--brand-light:#f5e6da;--gold:#d4a853;--text:#1a1208;--muted:#7a6a5a}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,#1a0a04 0%,#3d1a0a 50%,#1a0a04 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .login-card{background:#fff;border-radius:24px;padding:48px 40px;max-width:420px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.4);position:relative;overflow:hidden}
+  .login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--brand),var(--gold),var(--brand))}
+  .logo-wrap{text-align:center;margin-bottom:32px}
+  .logo{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--brand-dark)}
+  .logo span{color:var(--gold)}
+  .badge{display:inline-block;background:var(--brand-light);color:var(--brand-dark);font-size:.7rem;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:50px;margin-top:8px}
+  label{display:block;font-size:.75rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  .form-group{margin-bottom:18px}
+  input{width:100%;padding:14px 16px;border:1.5px solid #e8ddd4;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:#fdf8f2;outline:none;transition:border-color .2s,box-shadow .2s}
+  input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(192,98,47,.12);background:#fff}
+  .btn{width:100%;padding:15px;background:var(--brand);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:500;cursor:pointer;transition:background .2s,box-shadow .2s;box-shadow:0 4px 16px rgba(192,98,47,.3);margin-top:6px}
+  .btn:hover{background:var(--brand-dark)}
+  .btn:active{transform:scale(.98)}
+  .btn:disabled{background:#ccc;box-shadow:none;cursor:not-allowed}
+  .alert{display:none;padding:12px 16px;border-radius:10px;font-size:.85rem;margin-bottom:16px;text-align:center}
+  .alert.error{background:#fff0f0;border:1.5px solid #f5c6c6;color:#c0392b}
+  .alert.lock{background:#fff8e1;border:1.5px solid #f5d78a;color:#7d5c00}
+  .alert.show{display:block}
+  .attempts{font-size:.75rem;color:var(--muted);text-align:center;margin-top:12px}
+  .footer-link{text-align:center;margin-top:24px;font-size:.78rem;color:var(--muted)}
+  .footer-link a{color:var(--brand);text-decoration:none;font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <div class="logo-wrap">
+    <div style="font-size:2.4rem;margin-bottom:8px">🔐</div>
+    <div class="logo">Vicky<span>Shine</span></div>
+    <div class="badge">Admin Portal</div>
+  </div>
+
+  <div class="alert error" id="errorMsg">❌ Invalid username or password.</div>
+  <div class="alert lock" id="lockMsg">⏳ Too many attempts. Try again in <span id="lockTimer">60</span>s.</div>
+
+  <div class="form-group">
+    <label>Username</label>
+    <input id="user" placeholder="Admin username" autocomplete="username" onkeydown="if(event.key==='Enter')login()"/>
+  </div>
+  <div class="form-group">
+    <label>Password</label>
+    <input id="pass" type="password" placeholder="Admin password" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()"/>
+  </div>
+
+  <button class="btn" onclick="login()" id="loginBtn">🔑 Login to Dashboard</button>
+  <p class="attempts" id="attemptsMsg"></p>
+  <div class="footer-link"><a href="index.html">← Back to Marketplace</a></div>
+</div>
+
+<script>
+  const ADMIN_USER = "VickyShine Marketplace";
+  const ADMIN_PASS = "IMadeIt@VickyShine.26";
+
+  let attempts = 0;
+  const MAX = 5;
+  let locked = false;
+
+  function login() {
+    if (locked) return;
+    const u = document.getElementById("user").value.trim();
+    const p = document.getElementById("pass").value;
+    document.getElementById("errorMsg").classList.remove("show");
+
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+      sessionStorage.setItem("vs_admin", JSON.stringify({
+        loggedIn: true,
+        user: ADMIN_USER,
+        expires: Date.now() + 4 * 60 * 60 * 1000
+      }));
+      location.href = "dashboard.html";
+    } else {
+      attempts++;
+      if (attempts >= MAX) {
+        locked = true;
+        document.getElementById("loginBtn").disabled = true;
+        document.getElementById("lockMsg").classList.add("show");
+        let s = 60;
+        const t = setInterval(() => {
+          s--;
+          document.getElementById("lockTimer").textContent = s;
+          if (s <= 0) {
+            clearInterval(t);
+            locked = false; attempts = 0;
+            document.getElementById("loginBtn").disabled = false;
+            document.getElementById("lockMsg").classList.remove("show");
+            document.getElementById("attemptsMsg").textContent = "";
+          }
+        }, 1000);
+      } else {
+        document.getElementById("errorMsg").classList.add("show");
+        document.getElementById("attemptsMsg").textContent = (MAX - attempts) + " attempt(s) remaining.";
+      }
+    }
+  }
+</script>
+
+</body>
+</html>
