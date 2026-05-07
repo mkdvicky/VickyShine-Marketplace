@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VickyShine Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--brand:#c0622f;--brand-dark:#9a4a22;--brand-light:#f5e6da;--gold:#d4a853;--text:#1a1208;--muted:#7a6a5a;--bg:#fdf8f2;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  header{background:var(--brand);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(192,98,47,.3)}
+  .header-inner{max-width:640px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+  .logo{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;color:#fff}
+  .logo span{color:var(--gold)}
+  .tagline{font-size:.68rem;font-weight:300;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-top:2px}
+  .container{max-width:640px;margin:0 auto;padding:28px 20px 70px}
+  .notice{background:linear-gradient(135deg,var(--brand-light),#fbeedd);border-left:4px solid var(--brand);border-radius:14px;padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:12px}
+  .notice-icon{font-size:1.8rem;flex-shrink:0}
+  .notice-text strong{display:block;color:var(--brand-dark);font-size:.93rem}
+  .notice-text p{font-size:.81rem;color:var(--muted);margin-top:2px}
+  .section-title{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700;color:var(--brand-dark);margin-bottom:22px;padding-bottom:10px;border-bottom:2px solid var(--brand-light)}
+  .form-group{margin-bottom:18px}
+  label{display:block;font-size:.75rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  input,textarea,select{width:100%;padding:14px 16px;border:1.5px solid #e8ddd4;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.95rem;color:var(--text);background:#fff;outline:none;transition:border-color .2s,box-shadow .2s}
+  input:focus,textarea:focus,select:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(192,98,47,.12)}
+  textarea{resize:vertical;min-height:90px}
+  select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c0622f' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+  .payment-box{display:none;background:var(--brand-light);border:1.5px solid #e8c9ad;border-radius:10px;padding:16px 18px;margin-top:12px;animation:fadeIn .3s ease}
+  .payment-box.show{display:block}
+  .momo-number{font-size:1.25rem;font-weight:700;color:var(--brand);letter-spacing:1.5px;margin:6px 0 2px}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+  .btn{width:100%;padding:15px;background:var(--brand);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:500;cursor:pointer;transition:background .2s,box-shadow .2s;box-shadow:0 4px 16px rgba(192,98,47,.3);margin-top:6px}
+  .btn:hover{background:var(--brand-dark)}
+  .btn:active{transform:scale(.98)}
+  .btn:disabled{background:#ccc;box-shadow:none;cursor:not-allowed}
+  .success{display:none;text-align:center;padding:50px 20px;animation:fadeIn .5s ease}
+  .success.show{display:block}
+  .success h2{font-family:'Playfair Display',serif;font-size:2rem;color:var(--brand);margin:16px 0 10px}
+  .success p{color:var(--muted);font-size:.93rem;line-height:1.7}
+  .ref-badge{display:inline-block;background:var(--brand-light);color:var(--brand);font-weight:700;font-size:1.1rem;padding:10px 28px;border-radius:50px;margin:18px 0;letter-spacing:2px;border:1.5px solid #e8c9ad}
+  .spinner{display:none;width:22px;height:22px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin:0 auto}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  footer{text-align:center;padding:20px;font-size:.75rem;color:var(--muted);border-top:1px solid #ecdfd4}
+  footer strong{color:var(--brand)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="logo">Vicky<span>Shine</span></div>
+      <div class="tagline">Marketplace · KNUST</div>
+    </div>
+    <span style="font-size:1.6rem">🛍️</span>
+  </div>
+</header>
+
+<div class="container">
+  <div id="orderForm">
+    <div class="notice">
+      <div class="notice-icon">🚚</div>
+      <div class="notice-text">
+        <strong>KNUST Campus Delivery Only</strong>
+        <p>We deliver exclusively within and around KNUST campus.</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">Place Your Order</h2>
+
+    <div class="form-group">
+      <label>Full Name</label>
+      <input id="name" placeholder="e.g. Abena Mensah" autocomplete="name"/>
+    </div>
+    <div class="form-group">
+      <label>Phone Number</label>
+      <input id="phone" placeholder="e.g. 024 000 0000" type="tel"/>
+    </div>
+    <div class="form-group">
+      <label>Delivery Address</label>
+      <textarea id="address" placeholder="Must include your KNUST location (hall, block, room)"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Payment Method</label>
+      <select id="payment" onchange="togglePayment()">
+        <option value="">— Choose Payment —</option>
+        <option value="momo">📱 Mobile Money (MoMo)</option>
+        <option value="cash">🤝 Cash on Delivery</option>
+      </select>
+
+      <div id="momoBox" class="payment-box">
+        <p style="font-size:.85rem;color:var(--muted)">Send MoMo payment to:</p>
+        <div class="momo-number">0537520583</div>
+        <p style="font-size:.8rem;color:var(--muted);margin-bottom:12px">VickyShine Marketplace</p>
+        <label>MoMo Reference / Transaction ID</label>
+        <input id="momoRef" placeholder="Enter your MoMo reference number"/>
+      </div>
+
+      <div id="cashBox" class="payment-box">
+        <p>💵 Pay our delivery person when your order arrives at your KNUST location.</p>
+      </div>
+    </div>
+
+    <button class="btn" onclick="submitOrder()" id="submitBtn">
+      <span id="btnText">🛒 Place Order</span>
+      <div class="spinner" id="btnSpinner"></div>
+    </button>
+  </div>
+
+  <div class="success" id="successScreen">
+    <div style="font-size:3.5rem">✅</div>
+    <h2>Order Received!</h2>
+    <p>Thank you! We will contact you shortly to confirm your order.</p>
+    <div class="ref-badge" id="orderRef">VS-000000</div>
+    <p style="font-size:.82rem">Save this reference number for tracking.</p>
+    <button class="btn" style="max-width:260px;margin:28px auto 0;display:block" onclick="resetForm()">🔄 New Order</button>
+  </div>
+</div>
+
+<footer><strong>VickyShine Marketplace</strong> — All rights reserved &copy; 2025 · KNUST Campus</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyBkT_4-Hfck4G18lnRSmYMqqa85NgrIpSc",
+    authDomain:        "vickyshine-marketplace.firebaseapp.com",
+    projectId:         "vickyshine-marketplace",
+    storageBucket:     "vickyshine-marketplace.firebasestorage.app",
+    messagingSenderId: "779814751051",
+    appId:             "1:779814751051:web:98dfb5d1ae3aab7366b6ce"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  function genRef() {
+    return "VS-" + Date.now().toString(36).toUpperCase().slice(-6);
+  }
+
+  window.togglePayment = function() {
+    const v = document.getElementById("payment").value;
+    document.getElementById("momoBox").className = "payment-box" + (v === "momo" ? " show" : "");
+    document.getElementById("cashBox").className = "payment-box" + (v === "cash" ? " show" : "");
+  };
+
+  window.submitOrder = async function() {
+    const name    = document.getElementById("name").value.trim();
+    const phone   = document.getElementById("phone").value.trim();
+    const address = document.getElementById("address").value.trim();
+    const payment = document.getElementById("payment").value;
+    const momoRef = document.getElementById("momoRef")?.value.trim() || "";
+
+    if (!name)    { alert("Please enter your name."); return; }
+    if (!phone)   { alert("Please enter your phone number."); return; }
+    if (!address) { alert("Please enter your delivery address."); return; }
+    if (!address.toLowerCase().includes("knust")) {
+      alert("Delivery is only available around KNUST.\nPlease include your KNUST location in the address."); return;
+    }
+    if (!payment) { alert("Please select a payment method."); return; }
+    if (payment === "momo" && !momoRef) { alert("Please enter your MoMo Reference ID."); return; }
+
+    const order = {
+      id:        genRef(),
+      name, phone, address, payment,
+      momoRef:   payment === "momo" ? momoRef : "N/A",
+      status:    payment === "momo" ? "Awaiting Payment" : "Cash on Delivery",
+      createdAt: serverTimestamp()
+    };
+
+    document.getElementById("submitBtn").disabled = true;
+    document.getElementById("btnText").style.display = "none";
+    document.getElementById("btnSpinner").style.display = "block";
+
+    try {
+      await addDoc(collection(db, "orders"), order);
+      document.getElementById("orderRef").textContent = order.id;
+      document.getElementById("orderForm").style.display = "none";
+      document.getElementById("successScreen").classList.add("show");
+    } catch (err) {
+      console.error(err);
+      alert("Error saving order. Please try again.");
+    } finally {
+      document.getElementById("submitBtn").disabled = false;
+      document.getElementById("btnText").style.display = "inline";
+      document.getElementById("btnSpinner").style.display = "none";
+    }
+  };
+
+  window.resetForm = function() {
+    ["name","phone","address","momoRef"].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = "";
+    });
+    document.getElementById("payment").value = "";
+    document.getElementById("momoBox").className = "payment-box";
+    document.getElementById("cashBox").className = "payment-box";
+    document.getElementById("successScreen").classList.remove("show");
+    document.getElementById("orderForm").style.display = "block";
+  };
+</script>
+
+</body>
+  </html>
